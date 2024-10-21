@@ -1,0 +1,98 @@
+import javax.sound.midi.*;
+import java.util.Scanner;
+
+public class MidiReader {
+
+    public static void main(String[] args) {
+        try {
+            // List available MIDI devices
+            MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+            for (int i = 0; i < infos.length; i++) {
+                System.out.println(i + ": " + infos[i].getName());
+            }
+
+            // Prompt user to select a MIDI input device
+            System.out.print("Enter the number of the MIDI input device to use: ");
+            Scanner scanner = new Scanner(System.in);
+            int inputDeviceNumber = scanner.nextInt();
+
+            // Open the selected MIDI input device
+            MidiDevice inputDevice = MidiSystem.getMidiDevice(infos[inputDeviceNumber]);
+            inputDevice.open();
+
+            // Check if the input device has a transmitter
+            if (inputDevice.getMaxTransmitters() == 0) {
+                System.out.println("The selected input device does not have a transmitter.");
+                inputDevice.close();
+                return;
+            }
+
+            // List available MIDI output devices
+            System.out.println("Available MIDI output devices:");
+            for (int i = 0; i < infos.length; i++) {
+                System.out.println(i + ": " + infos[i].getName());
+            }
+
+            // Prompt user to select a MIDI output device
+            System.out.print("Enter the number of the MIDI output device to use: ");
+            int outputDeviceNumber = scanner.nextInt();
+
+            // Open the selected MIDI output device
+            MidiDevice outputDevice = MidiSystem.getMidiDevice(infos[outputDeviceNumber]);
+            outputDevice.open();
+
+            // Check if the output device has a receiver
+            if (outputDevice.getMaxReceivers() == 0) {
+                System.out.println("The selected output device does not have a receiver.");
+                outputDevice.close();
+                return;
+            }
+
+            // Get the input device's transmitter and set a receiver to handle incoming messages
+            Transmitter transmitter = inputDevice.getTransmitter();
+            Receiver receiver = outputDevice.getReceiver();
+            transmitter.setReceiver(new MidiInputReceiver(inputDevice.getDeviceInfo().toString(), receiver));
+
+            System.out.println("Listening for MIDI input on " + inputDevice.getDeviceInfo().getName() + "...");
+        } catch (MidiUnavailableException e) {
+            System.err.println("MIDI device is unavailable: " + e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static class MidiInputReceiver implements Receiver {
+        private String name;
+        private Receiver receiver;
+
+        public MidiInputReceiver(String name, Receiver receiver) {
+            this.name = name;
+            this.receiver = receiver;
+        }
+
+        @Override
+        public void send(MidiMessage message, long timeStamp) {
+            if (message instanceof ShortMessage) {
+                ShortMessage sm = (ShortMessage) message;
+                try {
+                    switch (sm.getCommand()) {
+                        case ShortMessage.NOTE_ON:
+                            System.out.println("Note ON: " + sm.getData1() + " Velocity: " + sm.getData2());
+                            receiver.send(new ShortMessage(ShortMessage.NOTE_ON, sm.getChannel(), sm.getData1(), sm.getData2()), timeStamp);
+                            break;
+                        case ShortMessage.NOTE_OFF:
+                            System.out.println("Note OFF: " + sm.getData1() + " Velocity: " + sm.getData2());
+                            receiver.send(new ShortMessage(ShortMessage.NOTE_OFF, sm.getChannel(), sm.getData1(), sm.getData2()), timeStamp);
+                            break;
+                    }
+                } catch (InvalidMidiDataException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        @Override
+        public void close() {
+        }
+    }
+}

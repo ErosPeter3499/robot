@@ -1,0 +1,1 @@
+gethistoricaldata megoldani, időpontokat kiolvasni a html oldalról, kirajzolni a chartot.

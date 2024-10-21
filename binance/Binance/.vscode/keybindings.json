@@ -1,0 +1,7 @@
+[
+    {
+        "key": "ctrl+alt+y", // or any other key combination you prefer
+        "command": "github.copilot.suggest",
+        "when": "editorTextFocus"
+    }
+]

@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Price from Binance</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .price {
+            font-size: 2em;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>BTC Price from Binance élő és igazi3</h1>
+        <div class="price" id="btcPrice">Loading...4</div>
+    </div>
+
+    <script>
+        async function fetchBTCPrice() {
+            try {
+                const response = await fetch('/btc-price');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                const data = await response.json();
+                document.getElementById('btcPrice').innerText = `BTC Price: $${data.price}`;
+            } catch (error) {
+                console.error('There has been a problem with your fetch operation:', error);
+                document.getElementById('btcPrice').innerText = 'Failed to load BTC price';
+            }
+        }
+
+        fetchBTCPrice();
+        setInterval(fetchBTCPrice, 1000); // 10000 milliseconds = 1 seconds
+    </script>
+</body>
+</html>

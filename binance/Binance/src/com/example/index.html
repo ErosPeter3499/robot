@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Price History</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        let btcChart;
+
+        async function fetchBtcPriceHistory() {
+            try {
+                console.log('Fetching BTC price history...');
+                const response = await fetch('http://localhost:8081/btc-price-history');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Data received:', data);
+
+                const labels = data.map(candle => new Date(candle[0]).toLocaleDateString());
+                const prices = data.map(candle => candle[4]); // Closing prices
+
+                renderChart(labels, prices);
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+        }
+
+        function renderChart(labels, prices) {
+            const ctx = document.getElementById('btcPriceChart').getContext('2d');
+            if (btcChart) {
+                btcChart.destroy();
+            }
+            btcChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'BTC Price',
+                        data: prices,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            }
+                        },
+                        y: {
+                            beginAtZero: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to start automatic updates
+        function startAutoUpdate(interval) {
+            fetchBtcPriceHistory(); // Fetch the price history immediately
+            setInterval(fetchBtcPriceHistory, interval);
+        }
+
+        // Start automatic updates every 10 seconds (10000 milliseconds)
+        window.onload = function() {
+            startAutoUpdate(10000);
+        };
+    </script>
+</head>
+<body onload="startAutoUpdate(10000)">
+    <h1>Bitcoin Price History</h1>
+    <button onclick="fetchBtcPriceHistory(1)">Get BTC Price History</button>
+    <canvas id="btcPriceChart" width="400" height="200"></canvas>
+</body>
+</html>

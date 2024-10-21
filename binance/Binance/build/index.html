@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTC Price</title>
+    <script>
+        async function fetchBtcPrice() {
+            try {
+                console.log('Fetching BTC price...');
+                const response = await fetch('http://localhost:8081/btc-prices');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Data received:', data);
+                const btcPriceDiv = document.getElementById('btc-price');
+                btcPriceDiv.innerText = `Current BTC Price: $${data.price}`;
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+            }
+        }
+
+        // Function to start automatic updates
+        function startAutoUpdate(interval) {
+            fetchBtcPrice(); // Fetch the price immediately
+            setInterval(fetchBtcPrice, interval);
+        }
+
+        // Start automatic updates every 10 seconds (10000 milliseconds)
+        window.onload = function() {
+            startAutoUpdate(1000);
+        };
+    </script>
+</head>
+<body onload="startAutoUpdate(100)">
+    <h1>Bitcoin Price</h1>
+    <button onclick="fetchBtcPrice()">Get BTC Price</button>
+    <div id="btc-price"></div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+    "java.project.sourcePaths": ["src"],
+    "java.project.outputPath": "bin",
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar"
+    ],
+    "CodeGPT.apiKey": "CodeGPT Plus Beta",
+    "launch": {
+        
+        "configurations": [],
+        "compounds": []
+    }
+}

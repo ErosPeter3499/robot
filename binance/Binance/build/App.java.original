@@ -12,13 +12,13 @@ import javax.crypto.spec.SecretKeySpec;
 import org.json.JSONObject;
 
 public class App {
-    private static final String API_KEY = "AyuexAroQnLqUw9FxyLNNra50ECgG3Np38uBgo2VgaL2MqozOLjnSkYA0LeEQLDx";
-    private static final String SECRET_KEY = "xMBIszrvGSGKGU23D7EsYyBtiYDgObtpC6R7tKHZPNGXG4BSahlVR9mpQCUPklgD";
+    private static final String API_KEY = "AyuexAroQnLqUw9FxyLNNra50ECgG3Np38uBgo2VgaL2MqozOLjnSkYA0LeEQLDx1";
+    private static final String SECRET_KEY = "xMBIszrvGSGKGU23D7EsYyBtiYDgObtpC6R7tKHZPNGXG4BSahlVR9mpQCUPklgD1";
     private static final String BASE_URL = "https://api.binance.com";
 
 
     public static void main(String[] args) {
-        System.out.println("Hello, World!!!!!!!!!!!!!!!!!!!faszom5");
+        System.out.println("Hello, World!!!!!!!!!!!!!!!!!!!faszom");
         accessBinanceServer();
     }
 

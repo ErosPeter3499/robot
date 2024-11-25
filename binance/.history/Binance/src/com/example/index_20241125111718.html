@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BTC Árfolyam</title>
+</head>
+<body>
+    <main>
+        <h1>BTC Árfolyam</h1>
+        <p id="btc-price">Árfolyam betöltése...</p>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const endpoint = "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT";
+            const priceElement = document.getElementById("btc-price");
+
+            function fetchBTCPrice() {
+                fetch(endpoint)
+                    .then(response => response.json())
+                    .then(data => {
+                        
+                        priceElement.textContent = `BTC Árfolyam: ${data.price} USD`;
+                    })
+                    .catch(error => {
+                        console.error("Error fetching BTC price:", error);
+                        priceElement.textContent = "Hiba történt az árfolyam betöltésekor.";
+                    });
+            }
+
+            // Fetch the BTC price immediately when the page loads
+            fetchBTCPrice();
+
+            // Refresh the BTC price every 60 seconds (60000 milliseconds)
+            setInterval(fetchBTCPrice, 5000);
+        });
+    </script>
+</body>
+</html>

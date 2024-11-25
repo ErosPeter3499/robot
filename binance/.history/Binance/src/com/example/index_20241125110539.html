@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="hu">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dummy JSON API Fetch</title>
+  </head>
+  <body>
+    <main>
+      <h1>BTC Adatok1</h1>
+      <ol id="data-list"></<li>
+    </main>
+    <script>
+        async function fetchBTCPrice() {
+            try {
+                const response = await fetch('http://localhost:8086/btc-price');
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                document.getElementById('price').innerText = `$${data.price}`;
+            } catch (error) {
+                console.error('There was a problem with the fetch operation:', error);
+                document.getElementById('price').innerText = 'Error fetching price';
+            }
+        }
+
+        fetchBTCPrice();
+    </script>
+  </body>
+</html>

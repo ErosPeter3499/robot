@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,27 +14,23 @@
       document.addEventListener("DOMContentLoaded", () => {
         const endpoint =
           "https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT";
-        const priceElement = document.getElementById("btc-price");
 
-        function fetchBTCPrice() {
-          fetch(endpoint)
-            .then((response) => response.json())
-            .then((data) => {
-              let roundedNumber = parseFloat(data.price).toFixed(2);
-              priceElement.textContent = `BTC Árfolyam: ${roundedNumber} USD`;
-            })
-            .catch((error) => {
-              console.error("Error fetching BTC price:", error);
-              priceElement.textContent =
-                "Hiba történt az árfolyam betöltésekor.";
-            });
-        }
-
+        fetch(endpoint)
+          .then((response) => response.json())
+          .then((data) => {
+            const priceElement = document.getElementById("btc-price");
+            priceElement.textContent = `BTC Árfolyam: ${data.price} USD`;
+          })
+          .catch((error) => {
+            console.error("Error fetching BTC price:", error);
+            const priceElement = document.getElementById("btc-price");
+            priceElement.textContent = "Hiba történt az árfolyam betöltésekor.";
+          });
         // Fetch the BTC price immediately when the page loads
         fetchBTCPrice();
 
         // Refresh the BTC price every 60 seconds (60000 milliseconds)
-        setInterval(fetchBTCPrice, 2000);
+        setInterval(fetchBTCPrice, 1000);
       });
     </script>
   </body>
